@@ -1,0 +1,44 @@
+[
+  {
+    "id": "1779718181501",
+    "name": "Jhon Doe",
+    "email": "jhondoe@gmail.com",
+    "password": "$2a$12$iu9clv2mE/F32giDx9NOP.VK5dMmvhiQxe1HrFR.o/IdGDHAxfiYu",
+    "createdAt": "2026-05-25T14:09:41.501Z"
+  },
+  {
+    "id": "1779724135113",
+    "name": "KK",
+    "email": "kk@gmail.com",
+    "password": "$2a$12$L/NstWFYBhDwyKz11.0svuQHMFBImQnTBOdK14xbaE1Zy.4sSv0Fq",
+    "createdAt": "2026-05-25T15:48:55.113Z"
+  },
+  {
+    "id": "1779740362749",
+    "name": "Chutiya",
+    "email": "chutiya@gmail.com",
+    "password": "$2a$12$NeA0qDBbW0NnnJSz.GWzEOjJ1Kp8akJ2B.cbeyDrj48EBZIZSdxJC",
+    "createdAt": "2026-05-25T20:19:22.749Z"
+  },
+  {
+    "id": "1779740665785",
+    "name": "S K",
+    "email": "sk@gmail.com",
+    "password": "$2a$12$s49BJxVntHMDXPRqrY/mYuzxFMXwk2cMdsK4G.4FjKeCTXXcsy4Pa",
+    "createdAt": "2026-05-25T20:24:25.785Z"
+  },
+  {
+    "id": "1779742740832",
+    "name": "John Doe",
+    "email": "johndoe@gmail.com",
+    "password": "$2a$12$ktlDMd.JjlNDSmdaeVqzIOW9Dul0UmxaLINAD.FTaWAdx3KTuCa.6",
+    "createdAt": "2026-05-25T20:59:00.832Z"
+  },
+  {
+    "id": "1779742971130",
+    "name": "holyshit",
+    "email": "holyshit@gmail.com",
+    "password": "$2a$12$/Zvz4o/NIP4IZtpnEcXghuKrq9QI1tReKspuhcEY6ApGHB3fNFhHi",
+    "createdAt": "2026-05-25T21:02:51.130Z"
+  }
+]
