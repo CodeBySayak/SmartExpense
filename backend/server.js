@@ -1,10 +1,10 @@
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
-const fs = require('fs');
-const path = require('path');
+const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const User = require('./models/User');
 
 dotenv.config();
 
@@ -12,28 +12,19 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 const HOST = process.env.HOST || '127.0.0.1';
 const JWT_SECRET = process.env.JWT_SECRET || 'smart_expense_super_secret_key_2024';
-const USERS_FILE = path.join(__dirname, 'users.json');
+const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/smart_expense'; // Default to local if not provided
+
+// Connect to MongoDB
+mongoose.connect(MONGO_URI)
+  .then(() => console.log('✅ Connected to MongoDB'))
+  .catch((err) => console.error('❌ MongoDB connection error:', err));
 
 // Middleware
 app.use(cors({
-  origin: 'http://localhost:5173',
+  origin: ['http://localhost:5173', 'http://localhost:5174'],
   credentials: true
 }));
 app.use(express.json());
-
-// Helper: read users from file
-function readUsers() {
-  if (!fs.existsSync(USERS_FILE)) {
-    fs.writeFileSync(USERS_FILE, JSON.stringify([]));
-  }
-  const data = fs.readFileSync(USERS_FILE, 'utf-8');
-  return JSON.parse(data);
-}
-
-// Helper: write users to file
-function writeUsers(users) {
-  fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2));
-}
 
 // Auth middleware
 function authenticateToken(req, res, next) {
@@ -62,25 +53,22 @@ app.post('/api/auth/register', async (req, res) => {
     if (password.length < 6)
       return res.status(400).json({ message: 'Password must be at least 6 characters' });
 
-    const users = readUsers();
-    const existingUser = users.find(u => u.email.toLowerCase() === email.toLowerCase());
+    const existingUser = await User.findOne({ email: email.toLowerCase().trim() });
     if (existingUser)
       return res.status(409).json({ message: 'Email already registered' });
 
     const hashedPassword = await bcrypt.hash(password, 12);
-    const newUser = {
-      id: Date.now().toString(),
+    
+    const newUser = new User({
       name: name.trim(),
       email: email.toLowerCase().trim(),
-      password: hashedPassword,
-      createdAt: new Date().toISOString()
-    };
+      password: hashedPassword
+    });
 
-    users.push(newUser);
-    writeUsers(users);
+    await newUser.save();
 
     const token = jwt.sign(
-      { id: newUser.id, email: newUser.email, name: newUser.name },
+      { id: newUser._id, email: newUser.email, name: newUser.name },
       JWT_SECRET,
       { expiresIn: '7d' }
     );
@@ -88,7 +76,7 @@ app.post('/api/auth/register', async (req, res) => {
     res.status(201).json({
       message: 'Account created successfully',
       token,
-      user: { id: newUser.id, name: newUser.name, email: newUser.email }
+      user: { id: newUser._id, name: newUser.name, email: newUser.email }
     });
   } catch (err) {
     console.error('Register error:', err);
@@ -104,8 +92,7 @@ app.post('/api/auth/login', async (req, res) => {
     if (!email || !password)
       return res.status(400).json({ message: 'Email and password are required' });
 
-    const users = readUsers();
-    const user = users.find(u => u.email.toLowerCase() === email.toLowerCase().trim());
+    const user = await User.findOne({ email: email.toLowerCase().trim() });
     if (!user)
       return res.status(401).json({ message: 'Invalid email or password' });
 
@@ -114,7 +101,7 @@ app.post('/api/auth/login', async (req, res) => {
       return res.status(401).json({ message: 'Invalid email or password' });
 
     const token = jwt.sign(
-      { id: user.id, email: user.email, name: user.name },
+      { id: user._id, email: user.email, name: user.name },
       JWT_SECRET,
       { expiresIn: '7d' }
     );
@@ -122,7 +109,7 @@ app.post('/api/auth/login', async (req, res) => {
     res.json({
       message: 'Login successful',
       token,
-      user: { id: user.id, name: user.name, email: user.email }
+      user: { id: user._id, name: user.name, email: user.email }
     });
   } catch (err) {
     console.error('Login error:', err);
@@ -131,20 +118,24 @@ app.post('/api/auth/login', async (req, res) => {
 });
 
 // GET /api/auth/me  (protected)
-app.get('/api/auth/me', authenticateToken, (req, res) => {
-  const users = readUsers();
-  const user = users.find(u => u.id === req.user.id);
-  if (!user) return res.status(404).json({ message: 'User not found' });
-  res.json({ id: user.id, name: user.name, email: user.email });
+app.get('/api/auth/me', authenticateToken, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select('-password');
+    if (!user) return res.status(404).json({ message: 'User not found' });
+    res.json({ id: user._id, name: user.name, email: user.email });
+  } catch (err) {
+    console.error('Me error:', err);
+    res.status(500).json({ message: 'Server error. Please try again.' });
+  }
 });
 
 // Health check
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'OK', message: 'Smart Expense API running' });
+  res.json({ status: 'OK', message: 'Smart Expense API running with MongoDB' });
 });
 
 const server = app.listen(PORT, HOST, () => {
-  console.log(`\n✅ Smart Expense Backend running on http://localhost:${PORT}`);
+  console.log(`\n✅ Smart Expense Backend running on http://${HOST}:${PORT}`);
   console.log(`   Auth endpoints:`);
   console.log(`   POST /api/auth/register`);
   console.log(`   POST /api/auth/login`);
