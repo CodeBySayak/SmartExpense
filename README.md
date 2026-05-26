@@ -86,7 +86,7 @@ The application features a modern, ultra-premium developer-centric dashboard des
 
 ```bash
 Smart_Expense_System/
-├── package.json               # Root scripts to run backend & frontend concurrently
+├── Readme.md                  # Overview of the file
 ├── backend/                   # Node.js backend
 │   ├── server.js              # Express app, auth routes, and JSON DB utilities
 │   ├── users.json             # Persistent local JSON user storage (git-ignored)
