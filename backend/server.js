@@ -21,9 +21,10 @@ mongoose.connect(MONGO_URI)
 
 // Middleware
 app.use(cors({
-  origin: ['http://localhost:5173', 'http://localhost:5174'],
+  origin: ['http://localhost:5173', 'http://localhost:5174', 'https://smart-expense-snowy.vercel.app'],
   credentials: true
 }));
+
 app.use(express.json());
 
 // Auth middleware
@@ -58,7 +59,7 @@ app.post('/api/auth/register', async (req, res) => {
       return res.status(409).json({ message: 'Email already registered' });
 
     const hashedPassword = await bcrypt.hash(password, 12);
-    
+
     const newUser = new User({
       name: name.trim(),
       email: email.toLowerCase().trim(),
