@@ -14,36 +14,7 @@ export default function Groups() {
   const [groups, setGroups] = useState(() => {
     if (!user?.id) return [];
     const saved = localStorage.getItem(`groups_${user.id}`);
-    if (saved) return JSON.parse(saved);
-
-    // Initial mock group if empty
-    const initial = [
-      {
-        id: "g1",
-        name: "Flat Roommates (3B)",
-        type: "Household",
-        icon: "🏠",
-        members: ["You", "Alice", "Bob", "Charlie"],
-        expenses: [
-          { id: "e1", description: "Hi-speed Router & Wifi", amount: 120.00, paidBy: "You", date: "2026-05-20", splitWith: ["You", "Alice", "Bob", "Charlie"] },
-          { id: "e2", description: "Weekly Grocery Restock", amount: 240.00, paidBy: "Alice", date: "2026-05-22", splitWith: ["You", "Alice", "Bob", "Charlie"] },
-          { id: "e3", description: "Electric Utility Bill", amount: 350.00, paidBy: "Bob", date: "2026-05-24", splitWith: ["You", "Alice", "Bob", "Charlie"] }
-        ]
-      },
-      {
-        id: "g2",
-        name: "Weekend Cabin Trip",
-        type: "Travel",
-        icon: "✈️",
-        members: ["You", "David", "Emma"],
-        expenses: [
-          { id: "e4", description: "Cabin Reservation", amount: 450.00, paidBy: "You", date: "2026-05-18", splitWith: ["You", "David", "Emma"] },
-          { id: "e5", description: "Highway Tolls & Gas", amount: 60.00, paidBy: "David", date: "2026-05-19", splitWith: ["You", "David", "Emma"] }
-        ]
-      }
-    ];
-    localStorage.setItem(`groups_${user.id}`, JSON.stringify(initial));
-    return initial;
+    return saved ? JSON.parse(saved) : [];
   });
 
   // Sync back to localStorage

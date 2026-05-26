@@ -9,18 +9,7 @@ export default function Transactions() {
   const [transactions, setTransactions] = useState(() => {
     if (!user?.id) return [];
     const saved = localStorage.getItem(`transactions_${user.id}`);
-    if (saved) return JSON.parse(saved);
-
-    // Initial mock data if empty
-    const initial = [
-      { id: "t1", date: "2026-05-25", description: "Starbucks Coffee", amount: 14.50, type: "expense", category: "Organic Dining Out", method: "Credit Card", notes: "Afternoon latte" },
-      { id: "t2", date: "2026-05-24", description: "Whole Foods", amount: 132.80, type: "expense", category: "Groceries", method: "Credit Card", notes: "Weekly shopping" },
-      { id: "t3", date: "2026-05-23", description: "AWS Cloud Services", amount: 342.00, type: "expense", category: "Premium Subscriptions", method: "Bank Transfer", notes: "Hosting fees" },
-      { id: "t4", date: "2026-05-18", description: "Consulting Gig Payment", amount: 1250.00, type: "income", category: "Freelance", method: "PayPal", notes: "Dashboard project milestone" },
-      { id: "t5", date: "2026-05-01", description: "Tech Salary paycheck", amount: 5200.00, type: "income", category: "Salary", method: "Bank Transfer", notes: "Monthly base" }
-    ];
-    localStorage.setItem(`transactions_${user.id}`, JSON.stringify(initial));
-    return initial;
+    return saved ? JSON.parse(saved) : [];
   });
 
   const [categories, setCategories] = useState(() => {

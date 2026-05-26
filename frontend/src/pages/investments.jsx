@@ -9,18 +9,7 @@ export default function Investments() {
   const [portfolio, setPortfolio] = useState(() => {
     if (!user?.id) return [];
     const saved = localStorage.getItem(`investments_${user.id}`);
-    if (saved) return JSON.parse(saved);
-
-    // Initial mock data if empty
-    const initial = [
-      { id: "inv1", name: "S&P 500 ETF", symbol: "VOO", category: "Stocks", shares: 12, buyPrice: 420.50, currentPrice: 468.20 },
-      { id: "inv2", name: "Apple Inc.", symbol: "AAPL", category: "Stocks", shares: 15, buyPrice: 165.00, currentPrice: 189.50 },
-      { id: "inv3", name: "Bitcoin", symbol: "BTC", category: "Crypto", shares: 0.18, buyPrice: 42000.00, currentPrice: 68400.00 },
-      { id: "inv4", name: "Ethereum", symbol: "ETH", category: "Crypto", shares: 1.5, buyPrice: 2200.00, currentPrice: 3820.00 },
-      { id: "inv5", name: "Vanguard Mutual Fund", symbol: "VTSAX", category: "Mutual Funds", shares: 50, buyPrice: 95.00, currentPrice: 108.40 }
-    ];
-    localStorage.setItem(`investments_${user.id}`, JSON.stringify(initial));
-    return initial;
+    return saved ? JSON.parse(saved) : [];
   });
 
   // Sync to localStorage

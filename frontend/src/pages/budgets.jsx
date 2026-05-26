@@ -15,11 +15,7 @@ export default function Budgets() {
   const [rules, setRules] = useState(() => {
     if (!user?.id) return [];
     const saved = localStorage.getItem(`budget_rules_${user.id}`);
-    return saved ? JSON.parse(saved) : [
-      { id: "1", type: "alert", category: "Groceries", threshold: 450, active: true },
-      { id: "2", type: "categorize", keyword: "Starbucks", category: "Organic Dining Out", active: true },
-      { id: "3", type: "categorize", keyword: "Chevron", category: "Fast Transport & Gas", active: true }
-    ];
+    return saved ? JSON.parse(saved) : [];
   });
 
   const [expenses] = useState(() => {

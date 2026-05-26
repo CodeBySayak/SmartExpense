@@ -9,18 +9,7 @@ export default function Bills() {
   const [bills, setBills] = useState(() => {
     if (!user?.id) return [];
     const saved = localStorage.getItem(`bills_${user.id}`);
-    if (saved) return JSON.parse(saved);
-
-    // Initial mock data if empty
-    const initial = [
-      { id: "b1", name: "Netflix Premium", amount: 22.99, dueDay: 5, category: "Entertainment", isPaid: true },
-      { id: "b2", name: "Spotify Family", amount: 16.99, dueDay: 12, category: "Entertainment", isPaid: true },
-      { id: "b3", name: "AWS Cloud hosting", amount: 45.00, dueDay: 18, category: "Utilities", isPaid: false },
-      { id: "b4", name: "Equinox Gym membership", amount: 180.00, dueDay: 1, category: "Health & Fitness", isPaid: false },
-      { id: "b5", name: "Rent payment", amount: 1600.00, dueDay: 1, category: "Housing", isPaid: true }
-    ];
-    localStorage.setItem(`bills_${user.id}`, JSON.stringify(initial));
-    return initial;
+    return saved ? JSON.parse(saved) : [];
   });
 
   const [income] = useState(() => {

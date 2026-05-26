@@ -9,16 +9,7 @@ export default function Debts() {
   const [debts, setDebts] = useState(() => {
     if (!user?.id) return [];
     const saved = localStorage.getItem(`debts_${user.id}`);
-    if (saved) return JSON.parse(saved);
-
-    // Initial mock data if empty
-    const initial = [
-      { id: "d1", name: "Capital One Credit Card", balance: 2400, apr: 22.9, minPayment: 75, category: "Credit Card" },
-      { id: "d2", name: "Student Loan (FedLoan)", balance: 18500, apr: 4.8, minPayment: 220, category: "Student Loan" },
-      { id: "d3", name: "Toyota Car Loan", balance: 8200, apr: 5.5, minPayment: 185, category: "Car Loan" }
-    ];
-    localStorage.setItem(`debts_${user.id}`, JSON.stringify(initial));
-    return initial;
+    return saved ? JSON.parse(saved) : [];
   });
 
   const [income] = useState(() => {
