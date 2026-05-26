@@ -10,7 +10,7 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-const HOST = process.env.HOST || '127.0.0.1';
+const HOST = process.env.HOST || '0.0.0.0';
 const JWT_SECRET = process.env.JWT_SECRET || 'smart_expense_super_secret_key_2024';
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/smart_expense'; // Default to local if not provided
 
